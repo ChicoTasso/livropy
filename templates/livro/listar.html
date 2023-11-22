@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block title %}Listagem de Livros{% endblock %}
+{% block content %}
+  {% bootstrap_messages %}
+  <ul class="list-group list-group-flush">
+    {% for livros in livros %}
+    <li class="list-group-item">     
+      <a href="{% url 'detalhar-livro' livros.id %}">{{livros.titulo}}</a></li>
+    {% endfor %}
+  </ul>
+  <a class="btn btn-primary" href="{% url 'cadastrar-livro' %}" role="button">Cadastrar Livro</a>
+{% endblock %}

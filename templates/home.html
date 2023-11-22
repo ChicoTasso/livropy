@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Pagina Inicial do Site{% endblock %}
+
+{% block content %}
+
+<div class="bg-body-tertiary p-5 rounded">
+  <img src="{% static 'img/noticia.png' %}" alt="" width="100">
+  <h1>Navbar example</h1>
+  <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you scroll, this navbar remains in its original position and moves with the rest of the page.</p>
+  <a class="btn btn-lg btn-primary" href="/docs/5.3/components/navbar/" role="button">View navbar docs &raquo;</a>
+</div>
+<div class="container">
+  <div class="row my-5">
+    <div class="col">
+      <h2>Livros Publicados</h2>
+      <ul class="list-group list-group-flush">
+        {% for livro in livros %}
+        <li class="list-group-item">     
+          <a href="{% url 'detalhar-livro' livro.id %}">{{livro.titulo}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col">
+      <h2>Nossos Autores</h2>
+      <ul class="list-group list-group-flush">
+        {% for autor in autores %}
+        <li class="list-group-item">
+          {% if autor.avatar %}
+          <img src="{{ autor.avatar.url }}" alt="" width="60">
+          {% else %}
+          <img src="https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_1280.png" alt="" width="60">
+          {% endif %}      
+          <a href="{% url 'detalhar-autor' autor.id %}">{{autor.nome}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+

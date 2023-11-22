@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block title %}Listagem de Autores{% endblock %}
+{% block content %}
+  {% bootstrap_messages %}
+  <ul class="list-group list-group-flush">
+    {% for autor in autores %}
+    <li class="list-group-item">
+      {% if autor.avatar %}
+      <img src="{{ autor.avatar.url }}" alt="" width="60">
+      {% else %}
+      <img src="https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_1280.png" alt="" width="60">
+      {% endif %}      
+      <a href="{% url 'detalhar-autor' autor.id %}">{{autor.nome}}</a></li>
+    {% endfor %}
+  </ul>
+  <a class="btn btn-primary" href="{% url 'cadastrar-autor' %}" role="button">Cadastrar Autor</a>
+{% endblock %}

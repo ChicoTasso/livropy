@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+{% block content %}
+<form method="post">{% csrf_token %}
+    <p>Tem certeza de que deseja apagar o Autor selecionado? "{{ object }}"?</p>
+    {{ form }}
+    <input type="submit" value="Confirmar">
+</form>
+
+{% endblock %}
