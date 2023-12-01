@@ -14,5 +14,6 @@
       <a href="{% url 'detalhar-autor' autor.id %}">{{autor.nome}}</a></li>
     {% endfor %}
   </ul>
+  {% bootstrap_pagination page_obj %}
   <a class="btn btn-primary" href="{% url 'cadastrar-autor' %}" role="button">Cadastrar Autor</a>
 {% endblock %}

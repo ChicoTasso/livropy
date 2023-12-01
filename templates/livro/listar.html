@@ -4,10 +4,11 @@
 {% block content %}
   {% bootstrap_messages %}
   <ul class="list-group list-group-flush">
-    {% for livros in livros %}
+    {% for livro in page_obj %}
     <li class="list-group-item">     
-      <a href="{% url 'detalhar-livro' livros.id %}">{{livros.titulo}}</a></li>
+      <a href="{% url 'detalhar-livro' livro.id %}">{{livro.titulo}}</a></li>
     {% endfor %}
   </ul>
+  {% bootstrap_pagination page_obj %}
   <a class="btn btn-primary" href="{% url 'cadastrar-livro' %}" role="button">Cadastrar Livro</a>
 {% endblock %}

@@ -1,5 +1,4 @@
-{% load static %}
-{% load bootstrap5 %}
+{% load static bootstrap5 %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,15 +32,22 @@
                         <a class="nav-link" href="{% url 'listar-livro' %}">Livros</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <button  class="btn btn-outline-success" type="submit">Login</button>
-                </form>
+                <div class="text-end">
+                    {% if user.is_authenticated %}
+                    <span class="text-light">{{ user.email }}</span>
+                    <a href="{% url 'logout' %}" class="btn btn-light me-2">Logout</a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+                    <a href="{% url 'cadastro' %}" class="btn btn-primary me-2">Cadastro</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
 
 
     <main class="container">
+        {% bootstrap_messages %}
         {% block content  %}
             <h1>Bloco de conteudo do site</h1>
         {% endblock%}

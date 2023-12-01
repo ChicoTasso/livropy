@@ -6,7 +6,7 @@
 <h4>Ilustrador : {{livro.ilustrador}}</h4><br>   
 <h4>Editora do livro : {{livro.editora}}</h4><br>
 <h4>Sinopse do livro: {{livro.sinopse}}</h4><br>
-
+<h4>Autor: <a href="{% url 'detalhar-autor' livro.escritor.id %}">{{livro.escritor}}</a></h4><br>
 <a class="btn btn-primary" href="{% url 'atualizar-livro' livro.id %}">Atualizar Livro</a>
 <a class="btn btn-danger" href="{% url 'deletar-livro' livro.id %}">Apagar Livro</a>
 

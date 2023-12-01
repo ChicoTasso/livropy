@@ -1,12 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Autor, Livro
-from .forms import AutorForm, LivroForm
+from .forms import AutorForm, LivroForm, RegistrationForm
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth import  get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
+from typing import Any
 # Create your views here.
 def home (request):
     return render(request,'home.html')
@@ -27,18 +28,29 @@ class HomeTemplateView(TemplateView):
 #     noticias = Noticia.objects.all()
 #     return render(request, 'home.html', {"noticias": noticias})
 
-class AutorListView(ListView):
+class AutorListView(LoginRequiredMixin,ListView):
     model=Autor
     template_name='autor/listar.html'
     context_object_name='autores'
     ordering='-nome'
+    paginate_by = 5
+
+    def get_queryset(self):
+        search = self.request.GET.get("q")
+        
+        if search:
+            self.autores = Autor.objects.filter(nome__icontains=search)
+        else:
+            self.autores = Autor.objects.all()
+
+        return self.autores
 
 
 # def listar(request):
 #     autores = Autor.objects.all().order_by('-nome')
 #     return render(request, 'listar.html', {'autores':autores})
 
-class AutorDetailView(DetailView):
+class AutorDetailView(LoginRequiredMixin,DetailView):
     model=Autor
     template_name='autor/detalhar.html'
     context_object_name='autor'
@@ -50,10 +62,11 @@ class AutorDetailView(DetailView):
 #     return render(request, 'detalhar.html', {'autor':autor})
 
 
-class AutorCreateView(CreateView):
+class AutorCreateView(LoginRequiredMixin,CreateView):
     model=Autor
     template_name='autor/cadastrar.html'
     form_class=AutorForm
+    permission_required='livro.add_autor'
     
 
     def get_success_url(self):
@@ -74,7 +87,7 @@ class AutorCreateView(CreateView):
 #          return render(request, 'cadastrar.html', {'form': form})
 
 
-class AutorUpdateView(UpdateView):
+class AutorUpdateView(LoginRequiredMixin,UpdateView):
     model=Autor
     template_name='autor/atualizar.html'
     form_class=AutorForm
@@ -98,7 +111,7 @@ class AutorUpdateView(UpdateView):
 #     else:
 #          return render(request, 'atualizar.html', {'form': form})
 
-class AutorDeleteView(DeleteView):
+class AutorDeleteView(LoginRequiredMixin,DeleteView):
     model=Autor
     template_name='autor/autor_confirm_delete.html'
     pk_url_kwarg='id'
@@ -114,20 +127,21 @@ class AutorDeleteView(DeleteView):
 #     return redirect('listar')
 
 
-class LivroListView(ListView):
+class LivroListView(LoginRequiredMixin,ListView):
     model=Livro
     template_name='livro/listar.html'
     context_object_name='livros'
     ordering='-titulo'
+    paginate_by = 5
 
 
-class LivroDetailView(DetailView):
+class LivroDetailView(LoginRequiredMixin,DetailView):
     model=Livro
     template_name='livro/detalhar.html'
     context_object_name='livro'
 
 
-class LivroCreateView(CreateView):
+class LivroCreateView(LoginRequiredMixin,CreateView):
     model=Livro
     template_name='livro/cadastrar.html'
     form_class=LivroForm
@@ -138,7 +152,7 @@ class LivroCreateView(CreateView):
         return reverse('listar-livro')
     
 
-class LivroUpdateView(UpdateView):
+class LivroUpdateView(LoginRequiredMixin,UpdateView):
     model=Livro
     template_name='livro/atualizar.html'
     form_class=LivroForm
@@ -148,9 +162,9 @@ class LivroUpdateView(UpdateView):
         return reverse('listar-livro')
     
 
-class LivroDeleteView(DeleteView):
+class LivroDeleteView(LoginRequiredMixin,DeleteView):
     model=Livro
-    template_name='livro/noticia_confirm_delete.html'
+    template_name='livro/livro_confirm_delete.html'
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, "Livro deletada com sucesso!")
@@ -160,8 +174,11 @@ class LivroDeleteView(DeleteView):
 class RegistrationView(CreateView):
     template_name = 'registration/registration.html'
     model = get_user_model()
-    form_class = UserCreationForm
+    form_class = RegistrationForm
     
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS, "Cadastro realizado com sucesso!")
         return reverse('home')
+   
+class PerfilAutor(TemplateView):
+    template_name='autor/perfil.html'
